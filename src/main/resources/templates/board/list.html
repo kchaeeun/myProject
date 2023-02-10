@@ -37,7 +37,7 @@
 
     <div class="container">
         <h2>게시판</h2>
-        <div>총 건수 : <span th:text="${#lists.size(boards)}"></span></div>
+        <div>총 건수 : <span th:text="${boards.totalElements}"></span></div> <!--알아서 메소드를 thymeleaf에서 사용해줌-->
         <!--테이블 생성-->
         <table class="table table-striped">
             <thead>
@@ -56,6 +56,18 @@
               </tr>
             </tbody>
           </table>
+          <!--페이지 넘기는 버튼(UI)-->
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+              </li>
+              <li class="page-item" th:each="i "><a class="page-link" href="#">1</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
           <!--글쓰기 버튼-->
           <div class="text-right">
             <!--앵커 사용해 글작성 페이지로 연결-->

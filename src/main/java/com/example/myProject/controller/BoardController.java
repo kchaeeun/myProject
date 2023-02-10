@@ -4,6 +4,9 @@ import com.example.myProject.model.Board;
 import com.example.myProject.repository.BoardRepository;
 import com.example.myProject.validator.BoardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +27,12 @@ public class BoardController {
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<Board> boards = boardRepository.findAll();
+    public String list(Model model, Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);    //JPA에서 첫 페이지는 0이 기본값
+        int startPage = Math.max(0, boards.getPageable().getPageNumber() - 4);  //최소값은 0으로 설정, 뒤에 값은 최대값, 현 페이지의 넘버를 가져온다.
+        int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 4);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("startPage", endPage);
         model.addAttribute("boards", boards);
         return "board/list";
     }
