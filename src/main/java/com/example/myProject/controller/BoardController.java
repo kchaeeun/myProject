@@ -19,7 +19,7 @@ public class BoardController {
     @Autowired
     private BoardRepository boardRepository;
 
-    //직접 만든 BoardValidator 사용하기 - spring 기동 시 instance가 담기
+    //직접 만든 BoardValidator 사용하기 - spring 기동 시 instance가 담김
     @Autowired
     private BoardValidator boardValidator;
 
