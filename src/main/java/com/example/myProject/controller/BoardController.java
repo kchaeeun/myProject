@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,12 +28,15 @@ public class BoardController {
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model, Pageable pageable) {
-        Page<Board> boards = boardRepository.findAll(pageable);    //JPA에서 첫 페이지는 0이 기본값
-        int startPage = Math.max(0, boards.getPageable().getPageNumber() - 4);  //최소값은 0으로 설정, 뒤에 값은 최대값, 현 페이지의 넘버를 가져온다.
-        int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 4);
+    public String list(Model model, @PageableDefault(size = 2) Pageable pageable, String searchText) {   //@PageableDefault를 통해 기본 page값을 정할 수 있다.
+        //Page<Board> boards = boardRepository.findAll(pageable);    //JPA에서 첫 페이지는 0이 기본값
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);    //JPA에서 첫 페이지는 0이 기본값
+
+        int startPage = Math.max(1, boards.getPageable().getPageNumber() - 4);  //최소값은 0으로 설정, 뒤에 값은 최대값, 현 페이지의 넘버를 가져온다.
+        int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 4);   //(큰 값(전체 페이지 값), 작은 값)
+
         model.addAttribute("startPage", startPage);
-        model.addAttribute("startPage", endPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("boards", boards);
         return "board/list";
     }
