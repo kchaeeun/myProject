@@ -28,7 +28,8 @@ public class BoardController {
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 2) Pageable pageable, String searchText) {   //@PageableDefault를 통해 기본 page값을 정할 수 있다.
+    public String list(Model model, @PageableDefault(size = 2) Pageable pageable,
+                       @RequestParam(required = false, defaultValue = "") String searchText) {   //@PageableDefault를 통해 기본 page값을 정할 수 있다.
         //Page<Board> boards = boardRepository.findAll(pageable);    //JPA에서 첫 페이지는 0이 기본값
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);    //JPA에서 첫 페이지는 0이 기본값
 
