@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
+
 
 import javax.sql.DataSource;
 
@@ -19,15 +19,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests()
+                .authorizeRequests()
                         //**--> 하위 폴더 모두 접근 가능
                         .antMatchers("/","/css/**").permitAll()
                         .anyRequest().authenticated()
                         .and()
                 .formLogin()
-                        .loginPage("/login")
+                        .loginPage("/account/login")
                         .permitAll()
                         .and()
                 .logout()
