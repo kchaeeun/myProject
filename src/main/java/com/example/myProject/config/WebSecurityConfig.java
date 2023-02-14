@@ -23,7 +23,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                         //**--> 하위 폴더 모두 접근 가능
-                        .antMatchers("/","/css/**").permitAll()
+                        .antMatchers("/","/account/register","/css/**").permitAll()
+                        //로그인 인증됨
                         .anyRequest().authenticated()
                         .and()
                 .formLogin()
@@ -39,17 +40,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             throws Exception {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
-                //안전하게 암호화
                 .passwordEncoder(passwordEncoder())
-                //인증 처리
-                .usersByUsernameQuery("select username,password,enabled "
+                .usersByUsernameQuery("select username, password, enabled "
                         + "from user "
                         + "where username = ?")
-                //권한 처리, join을 이용해 연동
-                .authoritiesByUsernameQuery("select username,name "
+                .authoritiesByUsernameQuery("select u.username, r.name "
                         + "from user_role ur inner join user u on ur.user_id = u.id "
                         + "inner join role r on ur.role_id = r.id "
-                        + "where email = ?");
+                        + "where u.username = ?");
     }
 
     @Bean

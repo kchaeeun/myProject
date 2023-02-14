@@ -20,7 +20,7 @@ class BoardApiController {
     @GetMapping("/boards")
     List<Board> all(@RequestParam(required = false, defaultValue = "") String title,
         @RequestParam(required = false, defaultValue = "") String content) {               //id가 아닌 titler과 content를 기준으로 데이터 출력
-        if(StringUtils.isEmpty(title) && StringUtils.isEmpty((content))) {                 //title과 content가 전달이 안됐을 경우
+        if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {                 //title과 content가 전달이 안됐을 경우
             return repository.findAll();        //전체 데이터 조회
         } else {
             return repository.findByTitleOrContent(title, content);                       //BoardRepository에서 만든 메서드 사용, title혹은 content에 맞는 데이터가 리턴
