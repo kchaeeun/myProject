@@ -19,7 +19,7 @@
     <!--오류 처리-->
     <!--csrf 토큰 전달을 위해 th를 사용해 action를 전달-->
     <form class="form-signin" th:action="@{/account/login}" method="post">
-        <img class="mb-4" src="https://getbootstrap.com/docs/4.6/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <a th:href="@{/}"><img class="mb-4" src="https://getbootstrap.com/docs/4.6/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"></a>
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username and password.

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head th:fragment="head(title)">
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,7 +13,8 @@
 
     <title th:text="${title}">Hello, Spring Boot!</title>
 </head>
-  <body>
+
+<body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" th:fragment="menu(menu)">
         <a class="navbar-brand" href="#">Spring Boot Tutorial</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
@@ -23,25 +25,33 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" th:classappend="${menu}=='home'? 'active'">
-                   <a class="nav-link" href="#" th:href="@{/}">홈 <span class="sr-only" th:if="${menu} == 'home'">(current)</span></a>
+                    <a class="nav-link" href="#" th:href="@{/}">홈 <span class="sr-only"
+                            th:if="${menu} == 'home'">(current)</span></a>
                 </li>
                 <li class="nav-item" th:classappend="${menu}=='board'? 'active'">
-                    <a class="nav-link" href="#" th:href="@{/board/list}">게시판 <span class="sr-only" th:if="${menu} == 'board'">(current)</span></a>
+                    <a class="nav-link" href="#" th:href="@{/board/list}">게시판 <span class="sr-only"
+                            th:if="${menu} == 'board'">(current)</span></a>
                 </li>
-                
+
             </ul>
             <!--상단에 로그인 창 만들기-->
-            <a class="btn btn-secondary my-2 my-sm-0" th:href="@{/account/login}">Login</a>
+            <!--로그인 안한 사람만 로그인창 볼 수 있게 설정-->
+            <a class="btn btn-secondary my-2 mr-2 my-sm-0" th:href="@{/account/login}"
+                sec:authorize="!isAuthenticated()">로그인</a>
+            <a class="btn btn-secondary my-2 my-sm-0" th:href="@{/account/register}"
+                sec:authorize="!isAuthenticated()">회원가입</a>
             <!-- my = margin y 방향 -->
-            <form class="form-inline my-2 my-lg-0">
+            <!--로그인 한 사람만 form 볼 수 있게 설정-->
+            <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
                 <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"> -->
-                <span class="text-white">사용자</span>
+                <span class="text-white" sec:authentication="name">사용자</span>
                 <!--좌우 margin-->
-                <span class="text-white mx-2">권한</span>
+                <span class="text-white mx-2" sec:authentication="principal.authorities">권한</span>
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button>
-              </form>
+            </form>
         </div>
     </nav>
 
-  </body>
+</body>
+
 </html>
