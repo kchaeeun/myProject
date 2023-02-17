@@ -21,9 +21,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //원활한 test 진행을 위해 보안 체크를 안함
+                .csrf().disable()
                 .authorizeRequests()
                         //**--> 하위 폴더 모두 접근 가능
-                        .antMatchers("/","/account/register","/css/**").permitAll()
+                        .antMatchers("/","/account/register","/css/**", "/api/**").permitAll()
                         //로그인 인증됨
                         .anyRequest().authenticated()
                         .and()

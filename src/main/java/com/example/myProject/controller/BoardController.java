@@ -2,18 +2,23 @@ package com.example.myProject.controller;
 
 import com.example.myProject.model.Board;
 import com.example.myProject.repository.BoardRepository;
+import com.example.myProject.service.BoardService;
 import com.example.myProject.validator.BoardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.Authenticator;
 import java.util.List;
 
 //경로 지정
@@ -22,6 +27,10 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardService boardService;
+
 
     //직접 만든 BoardValidator 사용하기 - spring 기동 시 instance가 담김
     @Autowired
@@ -55,12 +64,16 @@ public class BoardController {
     }
     @PostMapping("/form")
     //Validated는 Valid의 기능이 포함됨.
-    public String greetingSubmit(@Valid Board board, BindingResult bindingResult) {
+    public String postForm(@Valid Board board, BindingResult bindingResult, Authentication authentication) {
         boardValidator.validate(board, bindingResult);
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
-        boardRepository.save(board);
+        //인증 정보
+        //Authentication a = SecurityContextHolder.getContext().getAuthentication(); //전역변수 이용
+        String username = authentication.getName();
+        boardService.save(username, board);
+//        boardRepository.save(board);
         return "redirect:/board/list"; ///list로의 redirect가 되면서 list에서 다시 한번 조회
     }
 }
