@@ -19,6 +19,7 @@ public class User {
     private String password;
     private Boolean enabled;
 
+    @JsonIgnore                 //권한 데이터 표시 X
     @ManyToMany
     @JoinTable(
             name = "user_role",
@@ -34,6 +35,11 @@ public class User {
     //Cascade --> user 변경 시 Board도 변경을 하겠다.
     //orphanRemoval(defalut = false) --> 수정 전 데이터는 지운다.
     //--> 둘다 위험하지만 유용하다.(부모가 없는 데이터를 손쉽게 지울 수 있다.)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    //fetch에서 EAGER를 사용하면 user, board의 내용을 다 가져옴
+    //         LAZY를 사용하면 넘기길 원하는 것만 @JsonIgnore를 가지고 가져올 수 있음
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    @JsonIgnore         //board 정보 넘기지 x
     private List<Board> boards = new ArrayList<>();
 }

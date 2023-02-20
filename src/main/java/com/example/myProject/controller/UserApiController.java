@@ -3,6 +3,7 @@ package com.example.myProject.controller;
 import com.example.myProject.model.Board;
 import com.example.myProject.model.User;
 import com.example.myProject.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
@@ -11,6 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+//로그 찍기 위한 어노테이션
+@Slf4j
 class UserApiController {
 
     @Autowired
@@ -18,7 +21,14 @@ class UserApiController {
 
     @GetMapping("/users")
     List<User> all() {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        // 첫번째 유저 데이터 출력, log 출력
+        log.debug("getBoards().size() 호출전");
+        // 첫번째 파라미터의 정보가 {}에 담김
+        // 그 사용자의 데이터만 불러옴
+        log.debug("getBoards().size() : {}", users.get(0).getBoards().size());
+        log.debug("getBoards().size() 호출후");
+        return users;
     }
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
@@ -29,7 +39,7 @@ class UserApiController {
 
     @GetMapping("/users/{id}")             //작성한 데이터가 보여짐, id로 구분 가능
     User one(@PathVariable Long id) {
-
+        //user수에 맞게 sql문 출력
         return repository.findById(id).orElse(null);
     }
 
