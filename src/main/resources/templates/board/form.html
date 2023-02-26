@@ -27,13 +27,13 @@
             <input type="hidden" th:field="*{id}">
             <div class="form-group">
                 <label for="title">제목</label>
-                <input type="text" class="form-control"
-                    th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="title" th:field="*{title}">
-                    <!--title이 is-invalid로 오류가 발생했다면 classappend-->
+                <input type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+                    id="title" th:field="*{title}">
+                <!--title이 is-invalid로 오류가 발생했다면 classappend-->
                 <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                     제목 에러 메시지
                 </div>
-              </div>
+            </div>
             <!--textarea : 게시글 공간-->
             <div class="form-group">
                 <label for="content" class="form-label">내용</label>
@@ -46,24 +46,33 @@
             <!--글 작성 취소/확인 버튼-->
             <div class="text-right">
                 <!--게시판 사이트로 다시 이동(취소)-->
-                <a type="button" class="btn btn-primary" th:href="@{/board/list}">취소</a>
+                <a class="btn btn-primary" th:href="@{/board/list}">취소</a>
+                <button type="button" class="btn btn-primary" sec:authorize="hasRole('ROLE_ADMIN')"
+                    th:onclick="|deleteBoard(*{id})|">삭제</button>
                 <button type="submit" class="btn btn-primary">확인</button>
-              </div>
+            </div>
         </form>
-        
+
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
+    <footer th:replace="fragments/common :: footer"></footer>
+    <script>
+        //JQUERY가 slim이기 때문에 오류 발생
+        function deleteBoard(id) {
+            //DELETE /api/boards/{id}
+            $.ajax({
+                url: '/api/boards/' + id,
+                type: 'DELETE',
+                success: function (result) {
+                    // Do something with the result
+                    cosole.log('result', result);
+                    alert('삭제됐습니다.');
+                    window.location.href = '/board/list';    // 삭제 시 게시판 목록으로 이동
+                    // ※ 보안 취약점 : 유저 입장의 삭제 버튼을 지운다고 해도 postman사용으로 관리자 아니여도 삭제를 할 수 있게됨
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

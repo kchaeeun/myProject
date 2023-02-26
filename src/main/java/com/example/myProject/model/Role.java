@@ -1,21 +1,25 @@
 package com.example.myProject.model;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    //roles를 가지고 있는 사용자들 표시 x
     @JsonIgnore
     private List<User> users;
 }
+

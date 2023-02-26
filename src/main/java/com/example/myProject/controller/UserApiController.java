@@ -30,6 +30,7 @@ class UserApiController {
         log.debug("getBoards().size() 호출후");
         return users;
     }
+
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
         return repository.save(newUser);
